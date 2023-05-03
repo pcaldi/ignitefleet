@@ -6,7 +6,7 @@ import { styles } from './styles';
 export  function SignIn() {
   return (
     <View style={styles.container}>
-      <Text>Hello World!</Text>
+      <Text style={styles.title}>Hello World!</Text>
      
     </View>
   );
