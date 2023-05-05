@@ -23,7 +23,7 @@ export function HomeHeader() {
     <Container style={{ paddingTop }}>
       <Picture
         source={{ uri: user?.profile.pictureUrl }}
-        placeholder="L184i9kCbIof00ayjZay~qj[ayj@"
+        placeholder="L184i9kCbIof00ayjZay~qj[ayj@" //BlurHash
       />
       <Greeting>
         <Message>Olá,</Message>
