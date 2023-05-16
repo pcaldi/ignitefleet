@@ -11,6 +11,8 @@ import { SignIn } from './src/screens/SignIn';
 import { Loading } from './src/components/Loading';
 
 import { Routes } from './src/routes';
+import { RealmProvider } from './src/libs/realm';
+
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 export default function App() {
@@ -24,9 +26,15 @@ export default function App() {
     <AppProvider id={REALM_APP_ID}>
       <ThemeProvider theme={theme}>
         <SafeAreaProvider>
-          <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
+          <StatusBar 
+            barStyle="light-content" 
+            backgroundColor="transparent" 
+            translucent 
+          />
           <UserProvider fallback={SignIn}>
-            <Routes />
+            <RealmProvider>
+                <Routes />
+            </RealmProvider>
           </UserProvider>
         </SafeAreaProvider>
       </ThemeProvider>
