@@ -11,8 +11,8 @@ import { Container, Greeting, Message, Name, Picture } from './styles';
 export function HomeHeader() {
   const user = useUser();
   const app = useApp();
-  const insets = useSafeAreaInsets();
 
+  const insets = useSafeAreaInsets();
   const paddingTop = insets.top + 32;
 
   function handleLogout() {

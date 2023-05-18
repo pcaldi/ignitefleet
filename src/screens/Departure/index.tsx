@@ -4,7 +4,7 @@ import { Container } from './styles';
 export function Departure() {
   return (
     <Container>
-      <Header />
+      <Header title="Saída" />
     </Container>
   );
 }
