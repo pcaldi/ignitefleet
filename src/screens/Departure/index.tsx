@@ -21,7 +21,18 @@ export function Departure() {
   function handleDepartureRegister() {
     if (!licensePlateValidate(licensePlate)) {
       licensePlateRef.current?.focus();
-      return Alert.alert('Placa inválida', 'Informe a placa do veículo corretamente.');
+      return Alert.alert('Placa inválida.', 'Por favor, informe a placa correta do veículo.');
+    }
+
+    /* Validar somente se o usuário digitou algo dentro do input, 
+    validando e removendo os espaços com a função .trim()  */
+
+    if (description.trim().length === 0) {
+      descriptionRef.current?.focus();
+      return Alert.alert(
+        'Finalidade.',
+        'Por favor, informe a finalidade da utilização do veículo.'
+      );
     }
   }
 
