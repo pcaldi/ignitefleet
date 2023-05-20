@@ -1,3 +1,5 @@
+import 'react-native-get-random-values';
+
 import { StatusBar } from 'react-native';
 import { AppProvider, UserProvider } from '@realm/react';
 import { ThemeProvider } from 'styled-components/native';

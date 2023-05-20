@@ -1,5 +1,10 @@
 import { useRef, useState } from 'react';
 import { ScrollView, KeyboardAvoidingView, Platform, TextInput, Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
+import { useRealm } from '../../libs/realm';
+import { useUser } from '@realm/react';
+import { Historic } from '../../libs/realm/schemas/Historic';
 
 import { LicensePlateInput } from '../../components/LicensePlateInput';
 import { TextAreaInput } from '../../components/TextAreaInput';
@@ -14,25 +19,50 @@ const keyboardAvoidingViewBehavior = Platform.OS === 'android' ? 'height' : 'pos
 export function Departure() {
   const [licensePlate, setLicensePlate] = useState('');
   const [description, setDescription] = useState('');
+  const [isRegistering, setIsRegistering] = useState(false);
 
   const descriptionRef = useRef<TextInput>(null);
   const licensePlateRef = useRef<TextInput>(null);
 
+  const realm = useRealm();
+  const user = useUser();
+  const { goBack } = useNavigation();
+
   function handleDepartureRegister() {
-    if (!licensePlateValidate(licensePlate)) {
-      licensePlateRef.current?.focus();
-      return Alert.alert('Placa inválida.', 'Por favor, informe a placa correta do veículo.');
-    }
+    try {
+      if (!licensePlateValidate(licensePlate)) {
+        licensePlateRef.current?.focus();
+        return Alert.alert('Placa inválida.', 'Por favor, informe a placa correta do veículo.');
+      }
 
-    /* Validar somente se o usuário digitou algo dentro do input, 
-    validando e removendo os espaços com a função .trim()  */
+      /* Validar somente se o usuário digitou algo dentro do input, 
+      validando e removendo os espaços com a função .trim()  */
 
-    if (description.trim().length === 0) {
-      descriptionRef.current?.focus();
-      return Alert.alert(
-        'Finalidade.',
-        'Por favor, informe a finalidade da utilização do veículo.'
-      );
+      if (description.trim().length === 0) {
+        descriptionRef.current?.focus();
+        return Alert.alert(
+          'Finalidade.',
+          'Por favor, informe a finalidade da utilização do veículo.'
+        );
+      }
+      setIsRegistering(true);
+
+      realm.write(() => {
+        realm.create(
+          'Historic',
+          Historic.generate({
+            user_id: user!.id,
+            license_plate: licensePlate.toLocaleUpperCase(),
+            description,
+          })
+        );
+      });
+      Alert.alert('Saída', 'Saída do veículo registrada com sucesso.');
+      goBack();
+    } catch (error) {
+      setIsRegistering(false);
+      console.log(error);
+      Alert.alert('Error', 'Não foi possível registar a saída do veículo.');
     }
   }
 
@@ -63,7 +93,11 @@ export function Departure() {
               onChangeText={setDescription}
             />
 
-            <Button title="Registrar Saída" onPress={handleDepartureRegister} />
+            <Button
+              title="Registrar Saída"
+              onPress={handleDepartureRegister}
+              isLoading={isRegistering}
+            />
           </Content>
         </ScrollView>
       </KeyboardAvoidingView>
