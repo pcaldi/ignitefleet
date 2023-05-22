@@ -12,8 +12,8 @@ export class Historic extends Realm.Object<Historic> {
   description!: string;
   status!: string;
   license_plate!: string;
-  created_at!: string;
-  updated_at!: string;
+  created_at!: Date;
+  updated_at!: Date;
   // Passando o "!" no final da palavra indica que o campo será utilizado,
   // sendo assim, não precisa instanciar o construction.
   static generate({ user_id, description, license_plate }: GenerateProps) {
