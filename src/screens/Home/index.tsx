@@ -9,6 +9,7 @@ import { CarStatus } from '../../components/CarStatus';
 import { HomeHeader } from '../../components/HomeHeader';
 
 import { Container, Content } from './styles';
+import { HistoricCard } from '../../components/HistoricCard';
 
 export function Home() {
   const [vehicleInUse, setVehicleInUse] = useState<Historic | null>(null);
@@ -34,6 +35,14 @@ export function Home() {
       console.log(error);
     }
   }
+
+  function fetchHistoric() {
+    /*  */
+    const response = historic.filtered("status = 'arrival' SORT(created_at DESC)");
+
+    console.log(response);
+  }
+
   useEffect(() => {
     fetchVehicleInUse();
   }, []);
@@ -44,11 +53,16 @@ export function Home() {
     return () => realm.removeListener('change', fetchVehicleInUse);
   }, []);
 
+  useEffect(() => {
+    fetchHistoric();
+  }, [historic]);
+
   return (
     <Container>
       <HomeHeader />
       <Content>
         <CarStatus licensePlate={vehicleInUse?.license_plate} onPress={handleRegisterMoment} />
+        <HistoricCard data={{ created: '23/05', licensePlate: 'XXX2023', isSync: false }} />
       </Content>
     </Container>
   );
