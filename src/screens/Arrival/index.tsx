@@ -59,6 +59,8 @@ export function Arrival() {
         historic.created_at = new Date();
       });
 
+      Alert.alert('Chegada', 'Chegada registrada com sucesso!');
+
       goBack();
     } catch (error) {
       console.log(error);
