@@ -21,9 +21,9 @@ export function Arrival() {
   const { id } = route.params as RouteParamsProps;
 
   const realm = useRealm();
-  const { goBack } = useNavigation();
-
   const historic = useObject(Historic, new BSON.UUID(id));
+
+  const { goBack } = useNavigation();
 
   function handleRemoveVehicleUsage() {
     Alert.alert('Cancelar', 'Deseja cancelar a utilização do veículo?', [

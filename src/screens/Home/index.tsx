@@ -37,7 +37,6 @@ export function Home() {
   }
 
   function fetchHistoric() {
-    /*  */
     const response = historic.filtered("status = 'arrival' SORT(created_at DESC)");
 
     console.log(response);
@@ -49,7 +48,7 @@ export function Home() {
 
   useEffect(() => {
     realm.addListener('change', () => fetchVehicleInUse());
-
+    /* Sempre que utilizar o Listener, deve-se remover-lo. */
     return () => realm.removeListener('change', fetchVehicleInUse);
   }, []);
 
@@ -62,7 +61,7 @@ export function Home() {
       <HomeHeader />
       <Content>
         <CarStatus licensePlate={vehicleInUse?.license_plate} onPress={handleRegisterMoment} />
-        <HistoricCard data={{ created: '23/05', licensePlate: 'XXX2023', isSync: false }} />
+        <HistoricCard data={{ created: '23/05', licensePlate: 'xxx2023', isSync: false }} />
       </Content>
     </Container>
   );
