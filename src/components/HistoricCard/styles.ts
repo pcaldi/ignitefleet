@@ -21,6 +21,8 @@ export const LicensePlate = styled.Text`
   color: ${({ theme }) => theme.COLORS.WHITE};
   font-size: ${({ theme }) => theme.FONT_SIZE.XXL}px;
   font-family: ${({ theme }) => theme.FONT_FAMILY.BOLD};
+
+  text-transform: uppercase;
 `;
 
 export const Departure = styled.Text`
