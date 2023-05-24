@@ -1,6 +1,6 @@
 import { TouchableOpacityProps } from 'react-native';
 import { Check, ClockClockwise } from 'phosphor-react-native';
-import { useTheme } from 'styled-components';
+import { useTheme } from 'styled-components/native';
 
 import { Container, Info, LicensePlate, Departure } from './styles';
 
