@@ -81,24 +81,6 @@ export function Departure() {
               onChangeText={setLicensePlate}
             />
 
-            <LicensePlateInput
-              ref={licensePlateRef}
-              label="Placa do veículo"
-              placeholder="BRA2E19"
-              onSubmitEditing={() => descriptionRef.current?.focus()}
-              returnKeyType="next"
-              onChangeText={setLicensePlate}
-            />
-
-            <LicensePlateInput
-              ref={licensePlateRef}
-              label="Placa do veículo"
-              placeholder="BRA2E19"
-              onSubmitEditing={() => descriptionRef.current?.focus()}
-              returnKeyType="next"
-              onChangeText={setLicensePlate}
-            />
-
             <TextAreaInput
               ref={descriptionRef}
               label="Finalidade"

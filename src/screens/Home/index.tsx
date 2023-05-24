@@ -70,7 +70,11 @@ export function Home() {
   useEffect(() => {
     realm.addListener('change', () => fetchVehicleInUse());
     /* Sempre que utilizar o Listener, deve-se remove-lo. */
-    return () => realm.removeListener('change', fetchVehicleInUse);
+    return () => {
+      if (realm && !realm.isClosed) {
+        realm.removeListener('change', fetchVehicleInUse);
+      }
+    };
   }, []);
 
   useEffect(() => {
