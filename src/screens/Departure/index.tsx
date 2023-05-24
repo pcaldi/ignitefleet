@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
-import { ScrollView, KeyboardAvoidingView, Platform, TextInput, Alert } from 'react-native';
+import { ScrollView, TextInput, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { useRealm } from '../../libs/realm';
 import { useUser } from '@realm/react';
@@ -13,8 +14,6 @@ import { Button } from '../../components/Button';
 
 import { Container, Content } from './styles';
 import { licensePlateValidate } from '../../utils/LicensePlateValidate';
-
-const keyboardAvoidingViewBehavior = Platform.OS === 'android' ? 'height' : 'position';
 
 export function Departure() {
   const [licensePlate, setLicensePlate] = useState('');
@@ -70,9 +69,27 @@ export function Departure() {
     <Container>
       <Header title="Saída" />
 
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={keyboardAvoidingViewBehavior}>
+      <KeyboardAwareScrollView extraHeight={100}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <Content>
+            <LicensePlateInput
+              ref={licensePlateRef}
+              label="Placa do veículo"
+              placeholder="BRA2E19"
+              onSubmitEditing={() => descriptionRef.current?.focus()}
+              returnKeyType="next"
+              onChangeText={setLicensePlate}
+            />
+
+            <LicensePlateInput
+              ref={licensePlateRef}
+              label="Placa do veículo"
+              placeholder="BRA2E19"
+              onSubmitEditing={() => descriptionRef.current?.focus()}
+              returnKeyType="next"
+              onChangeText={setLicensePlate}
+            />
+
             <LicensePlateInput
               ref={licensePlateRef}
               label="Placa do veículo"
@@ -100,7 +117,7 @@ export function Departure() {
             />
           </Content>
         </ScrollView>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     </Container>
   );
 }
