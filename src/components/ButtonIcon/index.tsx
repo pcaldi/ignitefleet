@@ -4,7 +4,7 @@ import { useTheme } from 'styled-components';
 
 import { Container } from './styles';
 
-type IconBoxProps = (props: IconProps) => JSX.Element;
+export type IconBoxProps = (props: IconProps) => JSX.Element;
 
 type Props = TouchableOpacityProps & {
   icon: IconBoxProps;
