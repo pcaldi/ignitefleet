@@ -1,10 +1,11 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ScrollView, TextInput, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {useForegroundPermissions, watchPositionAsync, LocationAccuracy, LocationSubscription} from 'expo-location'
 
-import { useRealm } from '../../libs/realm';
 import { useUser } from '@realm/react';
+import { useRealm } from '../../libs/realm';
 import { Historic } from '../../libs/realm/schemas/Historic';
 
 import { LicensePlateInput } from '../../components/LicensePlateInput';
@@ -12,13 +13,15 @@ import { TextAreaInput } from '../../components/TextAreaInput';
 import { Header } from '../../components/Header';
 import { Button } from '../../components/Button';
 
-import { Container, Content } from './styles';
+import { Container, Content, Message } from './styles';
 import { licensePlateValidate } from '../../utils/LicensePlateValidate';
 
 export function Departure() {
   const [licensePlate, setLicensePlate] = useState('');
   const [description, setDescription] = useState('');
   const [isRegistering, setIsRegistering] = useState(false);
+
+  const [locationForegroundPermissions, requestLocationForegroundPermissions] = useForegroundPermissions();
 
   const descriptionRef = useRef<TextInput>(null);
   const licensePlateRef = useRef<TextInput>(null);
@@ -34,7 +37,7 @@ export function Departure() {
         return Alert.alert('Placa inválida.', 'Por favor, informe a placa correta do veículo.');
       }
 
-      /* Validar somente se o usuário digitou algo dentro do input, 
+      /* Validar somente se o usuário digitou algo dentro do input,
       validando e removendo os espaços com a função .trim()  */
 
       if (description.trim().length === 0) {
@@ -64,6 +67,41 @@ export function Departure() {
       Alert.alert('Error', 'Não foi possível registar a saída do veículo.');
     }
   }
+
+  useEffect(() => {
+    requestLocationForegroundPermissions();
+  },[])
+
+  useEffect(() => {
+    if(!locationForegroundPermissions?.granted){
+      return;
+    }
+
+    let subscription: LocationSubscription
+
+    watchPositionAsync({
+      accuracy: LocationAccuracy.High,
+      timeInterval: 1000
+    }, (location) => {
+      console.log(location)
+    })
+    .then((response) => subscription = response);
+
+    return () => subscription.remove();
+
+  },[locationForegroundPermissions])
+
+  if(!locationForegroundPermissions?.granted){
+    return (
+      <Container>
+         <Header title="Saída" />
+          <Message>
+            Você precisa permitir que o aplicativo tenha acesso a localização para utilizar essa funcionalidade. Por favor, acesse as configurações do seu dispositivo para conceder essa permissão ao aplicativo.
+          </Message>
+      </Container>
+    )
+  }
+
 
   return (
     <Container>
