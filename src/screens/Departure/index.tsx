@@ -10,6 +10,7 @@ import { Historic } from '../../libs/realm/schemas/Historic';
 
 import { LicensePlateInput } from '../../components/LicensePlateInput';
 import { TextAreaInput } from '../../components/TextAreaInput';
+import { LocationInfo } from '../../components/LocationInfo';
 import { Header } from '../../components/Header';
 import { Button } from '../../components/Button';
 import { Loading } from '../../components/Loading';
@@ -23,6 +24,8 @@ export function Departure() {
   const [description, setDescription] = useState('');
   const [isRegistering, setIsRegistering] = useState(false);
   const [isLoadingLocation, setIsLoadingLocation] = useState(true);
+  const [currentAddress, setCurrentAddress] = useState<string | null>(null);
+
 
   const [locationForegroundPermissions, requestLocationForegroundPermissions] = useForegroundPermissions();
 
@@ -87,7 +90,9 @@ export function Departure() {
       timeInterval: 1000
     }, (location) => {
       getAddressLocation(location.coords).then((address) => {
-        console.log(address);
+        if(address) {
+          setCurrentAddress(address);
+        }
       }).finally(() => setIsLoadingLocation(false));
     })
     .then((response) => subscription = response);
@@ -124,7 +129,17 @@ export function Departure() {
 
       <KeyboardAwareScrollView extraHeight={100}>
         <ScrollView showsVerticalScrollIndicator={false}>
+
           <Content>
+            {
+              currentAddress &&
+              <LocationInfo
+                label='Localização Atual'
+                description={currentAddress}
+              />
+            }
+
+
             <LicensePlateInput
               ref={licensePlateRef}
               label="Placa do veículo"
