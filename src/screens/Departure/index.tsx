@@ -12,14 +12,17 @@ import { LicensePlateInput } from '../../components/LicensePlateInput';
 import { TextAreaInput } from '../../components/TextAreaInput';
 import { Header } from '../../components/Header';
 import { Button } from '../../components/Button';
+import { Loading } from '../../components/Loading';
 
 import { Container, Content, Message } from './styles';
 import { licensePlateValidate } from '../../utils/LicensePlateValidate';
+import { getAddressLocation } from '../../utils/getAddressLocation';
 
 export function Departure() {
   const [licensePlate, setLicensePlate] = useState('');
   const [description, setDescription] = useState('');
   const [isRegistering, setIsRegistering] = useState(false);
+  const [isLoadingLocation, setIsLoadingLocation] = useState(true);
 
   const [locationForegroundPermissions, requestLocationForegroundPermissions] = useForegroundPermissions();
 
@@ -69,7 +72,7 @@ export function Departure() {
   }
 
   useEffect(() => {
-    requestLocationForegroundPermissions();
+    requestLocationForegroundPermissions(); /* Obter permissão do aplicativo */
   },[])
 
   useEffect(() => {
@@ -83,15 +86,21 @@ export function Departure() {
       accuracy: LocationAccuracy.High,
       timeInterval: 1000
     }, (location) => {
-      console.log(location)
+      getAddressLocation(location.coords).then((address) => {
+        console.log(address);
+      }).finally(() => setIsLoadingLocation(false));
     })
     .then((response) => subscription = response);
 
-    return () => subscription.remove();
+    return () => {
+      if(subscription) {
+        subscription.remove()
+      }
+    };
 
   },[locationForegroundPermissions])
 
-  if(!locationForegroundPermissions?.granted){
+  if(!locationForegroundPermissions?.granted){   /* Caso o usuário não de permissão para acessar a localização. */
     return (
       <Container>
          <Header title="Saída" />
@@ -99,6 +108,12 @@ export function Departure() {
             Você precisa permitir que o aplicativo tenha acesso a localização para utilizar essa funcionalidade. Por favor, acesse as configurações do seu dispositivo para conceder essa permissão ao aplicativo.
           </Message>
       </Container>
+    )
+  }
+
+  if (isLoadingLocation){
+    return (
+      <Loading/>
     )
   }
 
@@ -141,3 +156,7 @@ export function Departure() {
     </Container>
   );
 }
+function setIsLoading(arg0: boolean): void {
+  throw new Error('Function not implemented.');
+}
+
