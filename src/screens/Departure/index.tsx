@@ -18,6 +18,7 @@ import { Loading } from '../../components/Loading';
 import { Container, Content, Message } from './styles';
 import { licensePlateValidate } from '../../utils/LicensePlateValidate';
 import { getAddressLocation } from '../../utils/getAddressLocation';
+import { Car } from 'phosphor-react-native';
 
 export function Departure() {
   const [licensePlate, setLicensePlate] = useState('');
@@ -136,6 +137,7 @@ export function Departure() {
               <LocationInfo
                 label='Localização Atual'
                 description={currentAddress}
+                icon={Car}
               />
             }
 
