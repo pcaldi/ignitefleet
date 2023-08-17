@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ScrollView, TextInput, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import {useForegroundPermissions, watchPositionAsync, LocationAccuracy, LocationSubscription} from 'expo-location'
+import {useForegroundPermissions, watchPositionAsync, LocationAccuracy, LocationSubscription, LocationObjectCoords} from 'expo-location'
 
 import { useUser } from '@realm/react';
 import { useRealm } from '../../libs/realm';
@@ -14,6 +14,7 @@ import { LocationInfo } from '../../components/LocationInfo';
 import { Header } from '../../components/Header';
 import { Button } from '../../components/Button';
 import { Loading } from '../../components/Loading';
+import { Map } from '../../components/Map';
 
 import { Container, Content, Message } from './styles';
 import { licensePlateValidate } from '../../utils/LicensePlateValidate';
@@ -26,6 +27,7 @@ export function Departure() {
   const [isRegistering, setIsRegistering] = useState(false);
   const [isLoadingLocation, setIsLoadingLocation] = useState(true);
   const [currentAddress, setCurrentAddress] = useState<string | null>(null);
+  const [currentCoord, setCurrentCoord] = useState<LocationObjectCoords | null >(null);
 
 
   const [locationForegroundPermissions, requestLocationForegroundPermissions] = useForegroundPermissions();
@@ -90,6 +92,7 @@ export function Departure() {
       accuracy: LocationAccuracy.High,
       timeInterval: 1000
     }, (location) => {
+      setCurrentCoord(location.coords);
       getAddressLocation(location.coords).then((address) => {
         if(address) {
           setCurrentAddress(address);
@@ -130,44 +133,44 @@ export function Departure() {
 
       <KeyboardAwareScrollView extraHeight={100}>
         <ScrollView showsVerticalScrollIndicator={false}>
+          {currentCoord && <Map coordinates={[currentCoord]}/>}
+            <Content>
+              {
+                currentAddress &&
+                <LocationInfo
+                  label='Localização Atual'
+                  description={currentAddress}
+                  icon={Car}
+                />
+              }
 
-          <Content>
-            {
-              currentAddress &&
-              <LocationInfo
-                label='Localização Atual'
-                description={currentAddress}
-                icon={Car}
+
+              <LicensePlateInput
+                ref={licensePlateRef}
+                label="Placa do veículo"
+                placeholder="BRA2E19"
+                onSubmitEditing={() => descriptionRef.current?.focus()}
+                returnKeyType="next"
+                onChangeText={setLicensePlate}
               />
-            }
 
+              <TextAreaInput
+                ref={descriptionRef}
+                label="Finalidade"
+                placeholder="Vou utilizar o carro para..."
+                onSubmitEditing={handleDepartureRegister}
+                returnKeyType="send"
+                blurOnSubmit /* Como meu component tem a opção de multiline, tenho
+                que utilizar essa propriedade para enviar o meu formulário. */
+                onChangeText={setDescription}
+              />
 
-            <LicensePlateInput
-              ref={licensePlateRef}
-              label="Placa do veículo"
-              placeholder="BRA2E19"
-              onSubmitEditing={() => descriptionRef.current?.focus()}
-              returnKeyType="next"
-              onChangeText={setLicensePlate}
-            />
-
-            <TextAreaInput
-              ref={descriptionRef}
-              label="Finalidade"
-              placeholder="Vou utilizar o carro para..."
-              onSubmitEditing={handleDepartureRegister}
-              returnKeyType="send"
-              blurOnSubmit /* Como meu component tem a opção de multiline, tenho
-              que utilizar essa propriedade para enviar o meu formulário. */
-              onChangeText={setDescription}
-            />
-
-            <Button
-              title="Registrar Saída"
-              onPress={handleDepartureRegister}
-              isLoading={isRegistering}
-            />
-          </Content>
+              <Button
+                title="Registrar Saída"
+                onPress={handleDepartureRegister}
+                isLoading={isRegistering}
+              />
+            </Content>
         </ScrollView>
       </KeyboardAwareScrollView>
     </Container>
