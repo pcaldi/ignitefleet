@@ -1,6 +1,7 @@
 import { useRef } from "react";
-import MapView, {PROVIDER_GOOGLE, MapViewProps, LatLng, Marker} from "react-native-maps";
+import MapView, {PROVIDER_GOOGLE, MapViewProps, LatLng, Marker, Polyline} from "react-native-maps";
 import { Car, FlagCheckered } from "phosphor-react-native";
+import { useTheme } from "styled-components/native";
 
 import { IconBox } from "../IconBox";
 
@@ -10,6 +11,7 @@ type Props = MapViewProps & {
 
 export function Map({coordinates, ...rest}: Props) {
   const mapRef = useRef<MapView>(null);
+  const {COLORS} = useTheme();
   const lastCoordinate = coordinates[coordinates.length - 1];
 
 
@@ -45,12 +47,19 @@ export function Map({coordinates, ...rest}: Props) {
       {
         coordinates.length > 1 && /* Fazemos a condição caso aja outra coordenada  */
         /* Aqui pegaremos a ultima coordenada. */
-       <Marker identifier="arrival" coordinate={lastCoordinate}>
-           <IconBox
-              icon={FlagCheckered}
-              size="SMALL"
-           />
-      </Marker>
+        <>
+          <Marker identifier="arrival" coordinate={lastCoordinate}>
+              <IconBox
+                  icon={FlagCheckered}
+                  size="SMALL"
+              />
+          </Marker>
+          <Polyline
+            coordinates={[...coordinates]}
+            strokeColor={COLORS.GRAY_700}
+            strokeWidth={7}
+          />
+      </>
       }
 
 
