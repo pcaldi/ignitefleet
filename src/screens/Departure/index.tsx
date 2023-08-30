@@ -56,6 +56,12 @@ export function Departure() {
           'Por favor, informe a finalidade da utilização do veículo.'
         );
       }
+        /* Caso !NÃO tenha a latitude EE !NÃO tenha a longitude */
+      if (!currentCoord?.latitude && !currentCoord?.longitude) {
+        return (
+          Alert.alert('Localização!','Não foi possível obter a localização atual. Tente novamente!')
+        )
+      }
       setIsRegistering(true);
 
       realm.write(() => {
@@ -133,10 +139,7 @@ export function Departure() {
 
       <KeyboardAwareScrollView extraHeight={100}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          {currentCoord && <Map coordinates={[
-            {latitude: -25.4043 , longitude:  -49.2626 },
-            {latitude: -25.3911, longitude:  -49.2477 },
-          ]}/>}
+          {currentCoord && <Map coordinates={[currentCoord]}/>}
             <Content>
               {
                 currentAddress &&
