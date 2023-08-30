@@ -133,7 +133,10 @@ export function Departure() {
 
       <KeyboardAwareScrollView extraHeight={100}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          {currentCoord && <Map coordinates={[currentCoord]}/>}
+          {currentCoord && <Map coordinates={[
+            {latitude: -25.4043 , longitude:  -49.2626 },
+            {latitude: -25.4079, longitude: -49.2637 },
+          ]}/>}
             <Content>
               {
                 currentAddress &&
