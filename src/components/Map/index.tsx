@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import MapView, {PROVIDER_GOOGLE, MapViewProps, LatLng, Marker} from "react-native-maps";
 import { Car, FlagCheckered } from "phosphor-react-native";
 
@@ -8,8 +9,17 @@ type Props = MapViewProps & {
 }
 
 export function Map({coordinates, ...rest}: Props) {
-
+  const mapRef = useRef<MapView>(null);
   const lastCoordinate = coordinates[coordinates.length - 1];
+
+
+  async function onMapLoaded(){
+    if(coordinates.length > 1){
+      mapRef.current?.fitToSuppliedMarkers(['departure', 'arrival'], {
+        edgePadding: {top: 50, right: 50, bottom: 50, left: 50}
+      })
+    }
+  }
 
   return (
    <MapView
@@ -21,9 +31,11 @@ export function Map({coordinates, ...rest}: Props) {
         latitudeDelta:0.005,
         longitudeDelta:0.005,
       }}
+      ref={mapRef}
+      onMapLoaded={onMapLoaded}
       {...rest}
     >
-      <Marker coordinate={coordinates[0]}>
+      <Marker identifier="departure" coordinate={coordinates[0]}>
         <IconBox
           icon={Car}
           size="SMALL"
@@ -33,7 +45,7 @@ export function Map({coordinates, ...rest}: Props) {
       {
         coordinates.length > 1 && /* Fazemos a condição caso aja outra coordenada  */
         /* Aqui pegaremos a ultima coordenada. */
-       <Marker coordinate={lastCoordinate}>
+       <Marker identifier="arrival" coordinate={lastCoordinate}>
            <IconBox
               icon={FlagCheckered}
               size="SMALL"
