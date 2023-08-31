@@ -2,7 +2,14 @@ import { useEffect, useRef, useState } from 'react';
 import { ScrollView, TextInput, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import {useForegroundPermissions, watchPositionAsync, LocationAccuracy, LocationSubscription, LocationObjectCoords} from 'expo-location'
+import {
+  useForegroundPermissions,
+  requestBackgroundPermissionsAsync,
+  watchPositionAsync,
+  LocationAccuracy,
+  LocationSubscription,
+  LocationObjectCoords
+} from 'expo-location'
 
 import { useUser } from '@realm/react';
 import { useRealm } from '../../libs/realm';
@@ -39,7 +46,7 @@ export function Departure() {
   const user = useUser();
   const { goBack } = useNavigation();
 
-  function handleDepartureRegister() {
+  async function handleDepartureRegister() {
     try {
       if (!licensePlateValidate(licensePlate)) {
         licensePlateRef.current?.focus();
@@ -63,6 +70,14 @@ export function Departure() {
         )
       }
       setIsRegistering(true);
+
+        /* Permissão em segundo plano. */
+      const backgroundPermissions = await requestBackgroundPermissionsAsync()
+        /* Se o usuário !NÃO deu permissão para o nosso app 'granted' */
+      if(!backgroundPermissions.granted) {
+        setIsRegistering(false);
+        return Alert.alert('Localização', 'É necessário permitir  que o App tenha acesso a localização em segundo plano. Acesse as configurações do dispositivo e habilite "Permitir o tempo todo".')
+      }
 
       realm.write(() => {
         realm.create(
