@@ -8,7 +8,7 @@ type LocationProps = {
   timestamp: number;
 }
 
-/* Método para pegar as coordenadas */
+/* Método para obter as coordenadas salvas no dispositivo */
 
 export async function getStorageLocations(){
   const storage = await AsyncStorage.getItem(STORAGE_KEY);
@@ -19,7 +19,7 @@ export async function getStorageLocations(){
 }
  /* Método para salvar as coordenadas */
 
-export async function saveStorageLocations(newLocation: LocationProps) {
+export async function saveStorageLocation(newLocation: LocationProps) {
   const storage = await getStorageLocations();
   storage.push(newLocation);
 
@@ -28,6 +28,6 @@ export async function saveStorageLocations(newLocation: LocationProps) {
 
 /* Método para remover as coordenadas */
 
-export async function removeStorageLocations(){
+export async function removeStorageLocation(){
   await AsyncStorage.removeItem(STORAGE_KEY);
 }

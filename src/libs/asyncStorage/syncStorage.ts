@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const STORAGE_ASYNC_KEY = '@ignitefleet:last_sync';
 
-// Salva a ultima sincronização.
+//Método para salvar a ultima sincronização.
 export async function saveLastSyncTimestamp() {
   const timestamp = new Date().getTime();
   await AsyncStorage.setItem(STORAGE_ASYNC_KEY, timestamp.toString());
@@ -10,7 +10,7 @@ export async function saveLastSyncTimestamp() {
   return timestamp;
 }
 
-// Recupera a ultima sincronização.
+// Método para recuperar a ultima sincronização.
 export async function getLastSyncTimestamp() {
   const response = await AsyncStorage.getItem(STORAGE_ASYNC_KEY);
 
