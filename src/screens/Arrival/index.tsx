@@ -11,6 +11,7 @@ import { Historic } from '../../libs/realm/schemas/Historic';
 import { Map } from '../../components/Map';
 import { Header } from '../../components/Header';
 import { Button } from '../../components/Button';
+import { Locations } from '../../components/Locations';
 import { ButtonIcon } from '../../components/ButtonIcon';
 
 import {
@@ -134,6 +135,12 @@ export function Arrival() {
       {coordinates.length > 0 && <Map coordinates={coordinates}/>}
 
       <Content>
+        <Locations
+          departure={{ label: 'Saída', description: 'Saída Teste'}}
+          arrival={{ label: 'Chegada', description: 'Chegada Teste' }}
+
+        />
+
         <Label>Placa do Veículo</Label>
 
         <LicensePlate>{historic?.license_plate}</LicensePlate>
