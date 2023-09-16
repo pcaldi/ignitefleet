@@ -105,13 +105,21 @@ export function Arrival() {
 
     const lastSync = await getLastSyncTimestamp();
     const updateAt = historic!.updated_at.getTime();
-
     setDataNotSynced(updateAt > lastSync);
 
-    const locationsStorage = await getStorageLocations();
+    if(historic?.status === 'departure'){
 
-    setCoordinates(locationsStorage);
+      const locationsStorage = await getStorageLocations();
+      setCoordinates(locationsStorage);
+    } else {
+      setCoordinates(historic?.coords ?? [])
+    }
+
+
+
+
   }
+
 
 
 
