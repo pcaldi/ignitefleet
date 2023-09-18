@@ -24,8 +24,9 @@ import { Loading } from '../../components/Loading';
 import { Map } from '../../components/Map';
 
 import { startLocationTask } from '../../tasks/backgroundLocationTask';
-import { Container, Content, Message } from './styles';
+import { Container, Content, Message, MessageContent } from './styles';
 import { licensePlateValidate } from '../../utils/LicensePlateValidate';
+import { OpenSettings } from '../../utils/OpenSettings';
 import { getAddressLocation } from '../../utils/getAddressLocation';
 import { Car } from 'phosphor-react-native';
 
@@ -77,7 +78,7 @@ export function Departure() {
         /* Se o usuário !NÃO deu permissão para o nosso app 'granted' */
       if(!backgroundPermissions.granted) {
         setIsRegistering(false);
-        return Alert.alert('Localização', 'É necessário permitir  que o App tenha acesso a localização em segundo plano. Acesse as configurações do dispositivo e habilite "Permitir o tempo todo".')
+        return Alert.alert('Localização', 'É necessário permitir  que o App tenha acesso a localização em segundo plano. Acesse as configurações do dispositivo e habilite "Permitir o tempo todo".', [{ 'text': 'Abrir Configurações', onPress: OpenSettings}])
       }
 
       await startLocationTask();
@@ -142,9 +143,15 @@ export function Departure() {
     return (
       <Container>
          <Header title="Saída" />
-          <Message>
-            Você precisa permitir que o aplicativo tenha acesso a localização para utilizar essa funcionalidade. Por favor, acesse as configurações do seu dispositivo para conceder essa permissão ao aplicativo.
-          </Message>
+
+         <MessageContent>
+
+            <Message>
+              Você precisa permitir que o aplicativo tenha acesso a localização para utilizar essa funcionalidade. Por favor, acesse as configurações do seu dispositivo para conceder essa permissão ao aplicativo.
+            </Message>
+
+            <Button title='Abrir Configurações' onPress={OpenSettings} />
+         </MessageContent>
       </Container>
     )
   }
@@ -205,7 +212,5 @@ export function Departure() {
     </Container>
   );
 }
-function setIsLoading(arg0: boolean): void {
-  throw new Error('Function not implemented.');
-}
+
 
