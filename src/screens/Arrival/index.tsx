@@ -12,6 +12,7 @@ import { Historic } from '../../libs/realm/schemas/Historic';
 import { Map } from '../../components/Map';
 import { Header } from '../../components/Header';
 import { Button } from '../../components/Button';
+import { Loading } from '../../components/Loading';
 import { Locations } from '../../components/Locations';
 import { ButtonIcon } from '../../components/ButtonIcon';
 import { LocationAddressProps } from '../../components/LocationInfo';
@@ -32,6 +33,7 @@ import { getStorageLocations } from '../../libs/asyncStorage/locationStorage';
 import { getAddressLocation } from '../../utils/getAddressLocation';
 
 
+
 type RouteParamsProps = {
   id: string;
 };
@@ -41,6 +43,7 @@ export function Arrival() {
   const [coordinates, setCoordinates] = useState<LatLng[]>([]);
   const [departure, setDeparture] = useState<LocationAddressProps>({} as LocationAddressProps);
   const [arrival, setArrival] = useState<LocationAddressProps | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const route = useRoute();
   const { id } = route.params as RouteParamsProps;
@@ -143,14 +146,21 @@ export function Arrival() {
       })
     }
 
+    setIsLoading(false);
+
   }
-
-
 
 
   useEffect(() => {
     getLocationInfo();
   }, [historic]);
+
+  if(isLoading){
+    return(
+      <Loading/>
+    )
+  }
+
 
   return (
     <Container>
