@@ -7,12 +7,12 @@ import {
 } from './styles';
 
 
-export type locationAddressProps ={
+export type LocationAddressProps ={
   label:string;
   description:string;
 }
 
-type Props = locationAddressProps & {
+type Props = LocationAddressProps & {
   icon: IconBoxProps
 }
 

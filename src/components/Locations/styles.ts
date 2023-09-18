@@ -5,7 +5,7 @@ export const Container = styled.View`
 `;
 
 export const Line = styled.View`
-  height: 64px;
+  height: 54px;
   width: 1px;
   margin: -2px;
   margin-left: 23px;
